@@ -13,15 +13,14 @@ import java.util.TimerTask;
 public class HistConsmRecurso {
 
     private Integer id;
-    private Integer consumoCpu;
-    private Integer consumoDisco;
-    private Integer consumoRam;
+    private String sistemaOperacional;
+    private Double consumoCpu;
+    private Double consumoDisco;
+    private Double consumoRam;
+    private Double totalCpu;
+    private Double totalDisco;
+    private Double totalRam;
     private LocalDateTime dataHora = LocalDateTime.now();
-    private  Double temperatura;
-
-    // Imprimir a data e hora atual
-//        System.out.println("Data e Hora Atual: " + dataHoraAtual);
-
 
     Conexao conexao = new Conexao();
     JdbcTemplate con = conexao.getConexaoDoBanco();
@@ -29,60 +28,56 @@ public class HistConsmRecurso {
     Timer timer = new Timer();
     TelaMonitorDeRecursos telaMonitorDeRecursos = new TelaMonitorDeRecursos();
 
-
     public HistConsmRecurso() {
     }
 
-    public HistConsmRecurso(Integer id, Integer consumoCpu, Integer consumoDisco, Integer consumoRam, LocalDateTime dataHora,Double temperatura) {
+    public HistConsmRecurso(Integer id,String sistemaOperacional , Double consumoCpu, Double consumoDisco, Double consumoRam, Double totalCpu, Double totalDisco, Double totalRam, LocalDateTime dataHora) {
         this.id = id;
+        this.sistemaOperacional= sistemaOperacional;
         this.consumoCpu = consumoCpu;
         this.consumoDisco = consumoDisco;
         this.consumoRam = consumoRam;
+        this.totalCpu = totalCpu;
+        this.totalDisco = totalDisco;
+        this.totalRam = totalRam;
         this.dataHora = dataHora;
-        this.temperatura = temperatura;
+
     }
 
     public void mostrarHistorico() {
-        con.execute("DROP TABLE IF EXISTS historicos ");
-        con.execute("""
-                    create table if not exists historicos(
-                      id int primary key auto_increment,
-                      consumoDisco double not null,
-                      consumoRam double not null,
-                      consumoCpu double not null,
-                      temperatura double not null,
-                      dataHora datetime,
-                      fkHardware int,
-                      foreign key (fkHardware) references hardwares(idHardware)
-                      );
-                """);
 
         telaMonitorDeRecursos.criarTela();
         insertHistorico();
-
     }
 
     public void insertHistorico() {
-
-
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                String sistemasOperacional = (looca.getSistema()).getSistemaOperacional();
 
-                Integer consumoCpu = (looca.getProcessador().getUso()).intValue();
-                Long consumoDisco = (looca.getGrupoDeDiscos().getTamanhoTotal() / 100000) / looca.getGrupoDeDiscos().getQuantidadeDeDiscos();
-                Long consumoRam = (long) (looca.getMemoria().getEmUso()).intValue();
+                Double consumoCpu = (looca.getProcessador().getUso()).doubleValue() /1073741824.0;
+//                Double porcentagemUsoCpu = (consumoCpu / totalCpu) * 100.0;
+                Double totalCpu = (looca.getProcessador().getFrequencia()).doubleValue() / 1073741824.0;
+
+                Double consumoDisco = (double)((looca.getGrupoDeDiscos().getTamanhoTotal() / 100000) / looca.getGrupoDeDiscos().getQuantidadeDeDiscos())/1073741824.0;
+//                Double consumoDisco = (looca.getGrupoDeDiscos().getTamanhoTotal()).doubleValue();
+                Double totalDisco = (looca.getGrupoDeDiscos().getTamanhoTotal()).doubleValue()/1073741824.0;
+
+                Double consumoRam = (looca.getMemoria().getEmUso()).doubleValue()/1073741824.0;
+                Double totalRam = (looca.getMemoria().getTotal()).doubleValue()/1073741824.0;
+//                double porcentagemUsoRam = (consumoRam / totalRam) * 100.0;
+
                 dataHora = LocalDateTime.now();
-                Double temperatura= (looca.getTemperatura()).getTemperatura();
 
-                con.update("INSERT INTO historicos (id,consumoDisco,consumoRam,consumoCpu,temperatura,dataHora)VALUES (?,?, ?, ?, ?, ?)", id,consumoDisco, consumoRam,consumoCpu,temperatura, dataHora);
+                con.update("INSERT INTO hardwares (id,sistemaOperacional,consumoCpu, consumoDisco, consumoRam, totalCpu, totalDisco, totalRam, dataHora) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)",
+                        id,sistemasOperacional,consumoCpu, consumoDisco, consumoRam, totalCpu, totalDisco, totalRam, dataHora);
                 System.out.println("Inserindo dados...");
-
             }
-
         }, 1000, 1000);
-
     }
+
+    // Outros métodos getter e setter...
 
 
     public Integer getId() {
@@ -93,30 +88,61 @@ public class HistConsmRecurso {
         this.id = id;
     }
 
-    public Integer getConsumoCpu() {
+    public String getSistemaOperacional() {
+        return sistemaOperacional;
+    }
+
+    public void setSistemaOperacional(String sistemaOperacional) {
+        this.sistemaOperacional = sistemaOperacional;
+    }
+
+    public Double getConsumoCpu() {
         return consumoCpu;
     }
 
-    public void setConsumoCpu(Integer consumoCpu) {
+    public void setConsumoCpu(Double consumoCpu) {
         this.consumoCpu = consumoCpu;
     }
 
-    public Integer getConsumoDisco() {
+    public Double getConsumoDisco() {
         return consumoDisco;
     }
 
-    public void setConsumoDisco(Integer consumoDisco) {
+    public void setConsumoDisco(Double consumoDisco) {
         this.consumoDisco = consumoDisco;
     }
 
-    public Integer getConsumoRam() {
+    public Double getConsumoRam() {
         return consumoRam;
     }
 
-    public void setConsumoRam(Integer consumoRam) {
+    public void setConsumoRam(Double consumoRam) {
         this.consumoRam = consumoRam;
     }
 
+    public Double getTotalCpu() {
+        return totalCpu;
+    }
+
+    public void setTotalCpu(Double totalCpu) {
+        this.totalCpu = totalCpu;
+    }
+
+    public Double getTotalDisco() {
+        return totalDisco;
+    }
+
+    public void setTotalDisco(Double totalDisco) {
+        this.totalDisco = totalDisco;
+    }
+
+    public Double getTotalRam() {
+        return totalRam;
+    }
+
+    public void setTotalRam(Double totalRam) {
+        this.totalRam = totalRam;
+    }
 
     public LocalDateTime getDataHora() {
         return dataHora;
@@ -126,22 +152,17 @@ public class HistConsmRecurso {
         this.dataHora = dataHora;
     }
 
-    public Double getTemperatura() {
-        return temperatura;
-    }
-
-    public void setTemperatura(Double temperatura) {
-        this.temperatura = temperatura;
-    }
-
     @Override
     public String toString() {
         return "HistConsmRecurso{" +
-                ", id" + id +
+                "id=" + id +
+                "Sistema Operacional=" + sistemaOperacional +
                 ", consumoCpu=" + consumoCpu +
                 ", consumoDisco=" + consumoDisco +
                 ", consumoRam=" + consumoRam +
-                ", temperatura=" + temperatura +
+                ", totalCpu=" + totalCpu +
+                ", totalDisco=" + totalDisco +
+                ", totalRam=" + totalRam +
                 ", dataHora=" + dataHora +
                 '}';
     }
