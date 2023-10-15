@@ -27,25 +27,20 @@ CREATE TABLE IF NOT EXISTS funcionarios (
     FOREIGN KEY (fkEmpresa) REFERENCES empresas(idEmpresa)
 );
 
-CREATE TABLE IF NOT EXISTS hardwares (
-    idHardware INT PRIMARY KEY AUTO_INCREMENT,
-    sistemaOperacional varchar(50),
-    processador int NOT NULL,
-    ram double NOT NULL,
-    disco double NOT NULL,
-    fkFuncionario INT,
-    FOREIGN KEY (fkFuncionario) REFERENCES funcionarios(idFuncionario)
-);
 
-create table if not exists historicos(
+
+create table if not exists hardwares(
 id int primary key auto_increment,
+sistemaOperacional varchar(50),
+consumoCpu double not null,
 consumoDisco double not null,
 consumoRam double not null,
-consumoCpu double not null,
-temperatura double not null,
+totalDisco double NOT NULL,
+totalCpu int NOT NULL,
+totalRam double NOT NULL,
 dataHora datetime,
-fkHardware int,
-foreign key (fkHardware) references hardwares(idHardware)
+fkFuncionario int,
+foreign key (fkFuncionario) references funcionarios(idFuncionario)
 );
 
 create table if not exists tipoDeHardware(
@@ -54,7 +49,7 @@ tipoComponente varchar(45),
 min int,
 max int,
 fkHardware int,
-foreign key (fkHardware) references hardwares(idHardware)
+foreign key (fkHardware) references hardwares(id)
 );
 
 CREATE TABLE IF NOT EXISTS arquivos (
