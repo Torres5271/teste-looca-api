@@ -26,6 +26,7 @@ public class TelaMonitorDeRecursos {
         DefaultTableModel tableModel = new DefaultTableModel();
         JTable table = new JTable(tableModel);
         tableModel.addColumn("ID");
+        tableModel.addColumn("Sistema Opearional");
         tableModel.addColumn("Consumo Disco");
         tableModel.addColumn("Total Disco");
         tableModel.addColumn("Consumo RAM");
@@ -51,7 +52,7 @@ public class TelaMonitorDeRecursos {
 
 
             public void actionPerformed(ActionEvent e) {
-                List<HistConsmRecurso> dadosDoBanco = con.query("SELECT id, consumoCpu, consumoDisco, consumoRam, totalDisco, totalCpu, totalRam, dataHora FROM hardwares",
+                List<HistConsmRecurso> dadosDoBanco = con.query("SELECT id,sistemaOperacional, consumoCpu, consumoDisco, consumoRam, totalDisco, totalCpu, totalRam, dataHora FROM hardwares",
                         new BeanPropertyRowMapper<>(HistConsmRecurso.class));
 
                 System.out.println("Número de linhas retornadas: " + dadosDoBanco.size());
@@ -59,7 +60,7 @@ public class TelaMonitorDeRecursos {
                 tableModel.setRowCount(0);
                 for (HistConsmRecurso dado : dadosDoBanco) {
                     System.out.println("ID: " + dado.getId() + ", Consumo Disco: " + dado.getConsumoDisco() + ", Consumo RAM: " + dado.getConsumoRam() + ", Consumo CPU: " + dado.getConsumoCpu() + ", Total Disco: " + dado.getTotalDisco() + ", Total CPU: " + dado.getTotalCpu() + ", Total RAM: " + dado.getTotalRam() + ", Data e Hora: " + dado.getDataHora());
-                    tableModel.addRow(new Object[]{dado.getId(), dado.getConsumoDisco(),dado.getTotalDisco(), dado.getConsumoRam(),  dado.getTotalRam(), dado.getConsumoCpu(), dado.getTotalCpu(), dado.getDataHora()});
+                    tableModel.addRow(new Object[]{dado.getId(),dado.getSistemaOperacional(), dado.getConsumoDisco()/1073741824.0,dado.getTotalDisco()/1073741824.0, dado.getConsumoRam()/1073741824.0,  dado.getTotalRam()/1073741824.0, dado.getConsumoCpu()/1073741824.0, dado.getTotalCpu()/1073741824.0, dado.getDataHora()});
                 }
             }
         });

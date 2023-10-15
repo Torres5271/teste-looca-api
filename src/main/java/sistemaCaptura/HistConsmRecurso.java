@@ -56,16 +56,16 @@ public class HistConsmRecurso {
             public void run() {
                 String sistemasOperacional = (looca.getSistema()).getSistemaOperacional();
 
-                Double consumoCpu = (looca.getProcessador().getUso()).doubleValue() /1073741824.0;
+                Double consumoCpu = (looca.getProcessador().getUso()).doubleValue();
 //                Double porcentagemUsoCpu = (consumoCpu / totalCpu) * 100.0;
-                Double totalCpu = (looca.getProcessador().getFrequencia()).doubleValue() / 1073741824.0;
+                Double totalCpu = (looca.getProcessador().getFrequencia()).doubleValue();
 
-                Double consumoDisco = (double)((looca.getGrupoDeDiscos().getTamanhoTotal() / 100000) / looca.getGrupoDeDiscos().getQuantidadeDeDiscos())/1073741824.0;
+                Double consumoDisco = (double)((looca.getGrupoDeDiscos().getTamanhoTotal() / 100000) / looca.getGrupoDeDiscos().getQuantidadeDeDiscos());
 //                Double consumoDisco = (looca.getGrupoDeDiscos().getTamanhoTotal()).doubleValue();
-                Double totalDisco = (looca.getGrupoDeDiscos().getTamanhoTotal()).doubleValue()/1073741824.0;
+                Double totalDisco = (looca.getGrupoDeDiscos().getTamanhoTotal()).doubleValue();
 
-                Double consumoRam = (looca.getMemoria().getEmUso()).doubleValue()/1073741824.0;
-                Double totalRam = (looca.getMemoria().getTotal()).doubleValue()/1073741824.0;
+                Double consumoRam = (looca.getMemoria().getEmUso()).doubleValue();
+                Double totalRam = (looca.getMemoria().getTotal()).doubleValue();
 //                double porcentagemUsoRam = (consumoRam / totalRam) * 100.0;
 
                 dataHora = LocalDateTime.now();

@@ -1,4 +1,4 @@
-drop database safesync2;
+ drop database safesync2;
 create database safesync2;
 use  safesync2;
 
@@ -35,8 +35,8 @@ sistemaOperacional varchar(50),
 consumoCpu double not null,
 consumoDisco double not null,
 consumoRam double not null,
+totalCpu double NOT NULL,
 totalDisco double NOT NULL,
-totalCpu int NOT NULL,
 totalRam double NOT NULL,
 dataHora datetime,
 fkFuncionario int,
